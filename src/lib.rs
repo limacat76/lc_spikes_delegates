@@ -1,27 +1,21 @@
-fn l<X: GlobalT>(a_name : &'static str, a_function : fn(&mut X), a_global : &mut X) {
-    println!("Running {} on {}", a_name, GlobalT::get_name(a_global));
-    a_function(a_global);
+pub fn l<Specialized: Environment>(a_name : &'static str, a_function : fn(&mut Specialized), an_environment : &mut Specialized) {
+    println!("Running {} on {}", a_name, Environment::get_name(an_environment));
+    a_function(an_environment);
 }
 
-trait GlobalT {
+pub trait Environment {
     fn get_name(&self) -> std::string::String;
 }
-
-/*
-struct GlobalG<X: GlobalT> {
-    global : X
-}
-*/
 
 #[cfg(test)]
 mod tests {
     use std;
-    use GlobalT;
+    use Environment;
     use l;
 
-    trait TestAddsT : GlobalT {
-        fn add1ToValue(&mut self);
-        fn getValue(&self) -> i32;
+    trait TestAddsT : Environment {
+        fn add_1_to_value(&mut self);
+        fn get_my_value(&self) -> i32;
     }
 
     struct TestAddsS {
@@ -34,7 +28,7 @@ mod tests {
         }
     }
 
-    impl GlobalT for TestAddsS {
+    impl Environment for TestAddsS {
         fn get_name(&self) -> std::string::String {
             String::from("TestAddsS")
         }
@@ -42,11 +36,11 @@ mod tests {
 
     impl TestAddsT for TestAddsS {
 
-        fn add1ToValue(&mut self) {
+        fn add_1_to_value(&mut self) {
             self.index = self.index + 1;
         }
 
-        fn getValue(&self) -> i32 {
+        fn get_my_value(&self) -> i32 {
             self.index
         }
 
@@ -60,20 +54,20 @@ mod tests {
     #[test]
     fn it_adds_plain() {
         let mut tt = get_test_adds();
-        tt.add1ToValue();
-        assert_eq!(tt.getValue(), 1);
+        tt.add_1_to_value();
+        assert_eq!(tt.get_my_value(), 1);
     }
 
     fn delegate_adder(tt : &mut TestAddsS){
-        tt.add1ToValue();
+        tt.add_1_to_value();
     }
 
     #[test]
     fn it_adds_delegate() {
         let mut tt = get_test_adds();
-        tt.add1ToValue();
+        tt.add_1_to_value();
         l("add_delegate", delegate_adder, &mut tt);
-        assert_eq!(tt.getValue(), 2);
+        assert_eq!(tt.get_my_value(), 2);
     }
 
 }

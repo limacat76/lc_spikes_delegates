@@ -1,11 +1,8 @@
 [package]
-name = "lc_spike_delegate"
-version = "0.1.0"
+name = "lc_spikes_delegates"
+version = "0.1.1"
 authors = ["Davide 'limaCAT' Inglima <limacat@live.it>"]
 
 [lib]
 test = true
 plugin = false
-
-# [dependencies]
-# lazy_static = "1.0"
