@@ -1,17 +1,10 @@
-pub fn l<Specialized: Environment>(a_name : &'static str, a_function : fn(&mut Specialized), an_environment : &mut Specialized) {
-    println!("Running {} on {}", a_name, Environment::get_name(an_environment));
-    a_function(an_environment);
-}
-
-pub trait Environment {
-    fn get_name(&self) -> std::string::String;
-}
+pub mod lc;
 
 #[cfg(test)]
 mod tests {
     use std;
-    use Environment;
-    use l;
+    use lc::spikes::contexts::Environment;
+    use lc::spikes::delegates::l;
 
     trait TestAddsT : Environment {
         fn add_1_to_value(&mut self);
